@@ -1,11 +1,21 @@
-import dotenv from 'dotenv';
-import app from './app';
+import './loadEnv';
+import { ensureLocalDevDatabase } from './lib/devDatabase';
 
-dotenv.config();
+async function main() {
+  await ensureLocalDevDatabase();
 
-const port = Number(process.env.PORT ?? 4000);
+  // Load app after DATABASE_URL is finalized (dynamic import needs extension under ts-node ESM).
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const app = require('./app').default;
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Backend listening on port ${port}`);
+  const port = Number(process.env.PORT ?? 4000);
+
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Backend listening on port ${port}`);
+  });
+}
+
+main().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
 });

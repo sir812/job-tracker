@@ -1,0 +1,17 @@
+# Pyrefly configuration for Job Tracker
+# https://pyrefly.org/docs/configuration
+
+project-includes = [
+    "backend/**/*.py",
+]
+
+project-excludes = [
+    "**/node_modules/**",
+    "**/.venv/**",
+    "**/dist/**",
+    "**/__pycache__/**",
+]
+
+# Tell Pyrefly where the Python source root is so it can resolve
+# relative imports like `from .routers import ai`
+search-path = ["backend"]

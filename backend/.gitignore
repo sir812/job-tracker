@@ -1,5 +1,14 @@
 node_modules
 # Keep environment variables out of version control
 .env
+private-info.txt
+private-info.local
 
 /generated/prisma
+
+# Local SQLite dev database
+/prisma/dev.db
+/prisma/dev.db-journal
+
+# Scraper output — generated at runtime, not committed
+/data/

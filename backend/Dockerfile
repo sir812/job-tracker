@@ -1,5 +1,5 @@
 ### Backend Dockerfile (Express + Prisma)
-FROM node:20-alpine AS builder
+FROM cgr.dev/chainguard/node:latest-dev AS builder
 WORKDIR /app
 
 # Install deps
@@ -13,7 +13,7 @@ RUN npm run build
 # Generate Prisma client
 RUN npx prisma generate
 
-FROM node:20-alpine AS runner
+FROM cgr.dev/chainguard/node:latest AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 

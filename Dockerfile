@@ -1,5 +1,5 @@
 ### Frontend Dockerfile (Next.js)
-FROM node:20-alpine AS builder
+FROM cgr.dev/chainguard/node:latest-dev AS builder
 WORKDIR /app
 
 # Install deps
@@ -10,7 +10,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:20-alpine AS runner
+FROM cgr.dev/chainguard/node:latest AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 

@@ -2,6 +2,8 @@ import cors from 'cors';
 import express from 'express';
 import authRoutes from './routes/auth';
 import jobRoutes from './routes/jobs';
+import scraperRoutes from './routes/scraper';
+import { errorHandler } from './middleware/errorHandler';
 
 export const app = express();
 
@@ -14,9 +16,12 @@ app.get('/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/scraper', scraperRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
+
+app.use(errorHandler);
 
 export default app;
