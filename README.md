@@ -146,7 +146,7 @@ Installation
 
 Clone Repository
 
-git clone 
+git clone - https://github.com/sir812/job-tracker.git
 
 cd job-tracker
 
