@@ -164,24 +164,6 @@ Backend
 cd server
 npm install
 
----
-
-Environment Variables
-
-Create a ".env" file inside the server directory.
-
-DATABASE_URL=your_database_url
-
-JWT_SECRET=your_secret_key
-
-PORT=5000
-
-Example PostgreSQL URL:
-
-DATABASE_URL="postgresql://username:password@localhost:5432/jobtracker"
-
----
-
 Prisma Setup
 
 Generate Prisma Client:
