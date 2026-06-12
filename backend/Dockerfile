@@ -6,12 +6,17 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --production=false
 
-# Copy source and build
+# Copy source
 COPY . .
-RUN npm run build
 
-# Generate Prisma client
+# Set dummy DATABASE_URL to satisfy Prisma 6 config validation
+ENV DATABASE_URL="postgresql://postgres:postgres@localhost:5432/db"
+
+# Generate Prisma client first so that TS compilation succeeds
 RUN npx prisma generate
+
+# Build application
+RUN npm run build
 
 FROM cgr.dev/chainguard/node:latest AS runner
 WORKDIR /app

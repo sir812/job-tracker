@@ -1,4 +1,4 @@
-### Frontend Dockerfile (Next.js)
+### Frontend Dockerfile (Vite React)
 FROM cgr.dev/chainguard/node:latest-dev AS builder
 WORKDIR /app
 
@@ -14,10 +14,9 @@ FROM cgr.dev/chainguard/node:latest AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
+# Copy static build files from builder
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
-CMD ["npm", "start"]
+# Serve the static Vite build folder using serve on port 3000
+CMD ["npx", "serve", "dist", "-p", "3000", "-s"]
