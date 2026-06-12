@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Job, Activity, InterviewEvent } from "../types/job";
 import { jobsService } from "../services/api";
+import { useAuth } from "./AuthContext";
 
 interface JobContextType {
   jobs: Job[];
@@ -26,10 +27,19 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all initial database records on boot
+  const { token } = useAuth();
+
+  // Fetch all database records when token is set, or clear them when logged out
   useEffect(() => {
-    loadAllData();
-  }, []);
+    if (token) {
+      loadAllData();
+    } else {
+      setJobs([]);
+      setActivities([]);
+      setInterviews([]);
+      setError(null);
+    }
+  }, [token]);
 
   const loadAllData = async () => {
     setLoading(true);
