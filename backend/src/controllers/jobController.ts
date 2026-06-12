@@ -62,6 +62,15 @@ export async function createJob(req: AuthenticatedRequest, res: Response) {
     },
   });
 
+  await prisma.activity.create({
+    data: {
+      userId: req.userId ?? 0,
+      type: job.status.toLowerCase(),
+      message: `Added new job entry: ${job.role || job.title} at ${job.company}`,
+      jobId: job.id,
+    },
+  });
+
   return res.status(201).json({ job });
 }
 
@@ -76,6 +85,9 @@ export async function updateJob(req: AuthenticatedRequest, res: Response) {
 
   const { title, company, role, status, link, salary, location, notes, dateApplied, priority, tags } = req.body as Record<string, unknown>;
 
+  const oldStatus = existing.status;
+  const newStatus = typeof status === 'string' ? status : existing.status;
+
   const job = await prisma.job.update({
     where: { id: existing.id },
     data: {
@@ -89,9 +101,20 @@ export async function updateJob(req: AuthenticatedRequest, res: Response) {
       notes: notes !== undefined ? (notes ? String(notes) : null) : existing.notes,
       dateApplied: typeof dateApplied === 'string' && dateApplied ? new Date(dateApplied) : existing.dateApplied,
       priority: priority !== undefined ? Number(priority) : existing.priority,
-      tags: tags !== undefined ? normalizeTags(tags) : existing.tags,
+      tags: tags !== undefined ? normalizeTags(tags) : (existing.tags as any),
     },
   });
+
+  if (newStatus !== oldStatus) {
+    await prisma.activity.create({
+      data: {
+        userId: req.userId ?? 0,
+        type: newStatus.toLowerCase(),
+        message: `Status of ${job.role || job.title} at ${job.company} changed from ${oldStatus} to ${newStatus}`,
+        jobId: job.id,
+      },
+    });
+  }
 
   return res.json({ job });
 }
@@ -104,6 +127,14 @@ export async function deleteJob(req: AuthenticatedRequest, res: Response) {
   if (!existing) {
     return res.status(404).json({ message: 'Job not found' });
   }
+
+  await prisma.activity.create({
+    data: {
+      userId: req.userId ?? 0,
+      type: 'rejected',
+      message: `Removed job entry: ${existing.role || existing.title} at ${existing.company}`,
+    },
+  });
 
   await prisma.job.delete({ where: { id: existing.id } });
   return res.status(204).send();

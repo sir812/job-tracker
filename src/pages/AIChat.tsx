@@ -37,7 +37,7 @@ import {
   findJobs,
   scrapeAndFindJobs,
 } from "../services/aiChat";
-import type { Job } from "../data/mockData";
+import type { Job } from "../types/job";
 
 type ChatRole = "assistant" | "user";
 type ChatMode = "general" | "cover-letter" | "resume-bullet" | "job-fit" | "interview-prep" | "find-jobs";

@@ -86,7 +86,7 @@ const EmptyStateText: React.FC<{ children: React.ReactNode; className?: string }
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const { jobs, activities, interviews, loading } = useJobs();
+  const { jobs, activities, interviews, loading, error, reloadAllData } = useJobs();
   const [greeting, setGreeting] = useState("Hello");
 
   useEffect(() => {
@@ -132,6 +132,23 @@ export const Dashboard: React.FC = () => {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[400px]">
         <Spinner size="lg" className="text-cyan-400" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] p-6 text-center select-none">
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 p-6 rounded-3xl max-w-md shadow-lg backdrop-blur-md flex flex-col items-center gap-4">
+          <span className="text-4xl">⚠️</span>
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">Failed to Load Dashboard</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">{error}</p>
+          </div>
+          <Button variant="primary" size="sm" onClick={reloadAllData}>
+            Try Again
+          </Button>
+        </div>
       </div>
     );
   }

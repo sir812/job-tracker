@@ -4,7 +4,7 @@ import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
 import { Calendar as CalendarIcon, Clock, MapPin, AlignLeft, CalendarRange } from "lucide-react";
-import { InterviewEvent } from "../data/mockData";
+import { InterviewEvent } from "../types/job";
 
 export const Calendar: React.FC = () => {
   const { interviews } = useJobs();

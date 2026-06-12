@@ -55,6 +55,14 @@ async function createJob(req, res) {
             userId: req.userId ?? 0,
         },
     });
+    await prisma_1.prisma.activity.create({
+        data: {
+            userId: req.userId ?? 0,
+            type: job.status.toLowerCase(),
+            message: `Added new job entry: ${job.role || job.title} at ${job.company}`,
+            jobId: job.id,
+        },
+    });
     return res.status(201).json({ job });
 }
 async function updateJob(req, res) {
@@ -65,6 +73,8 @@ async function updateJob(req, res) {
         return res.status(404).json({ message: 'Job not found' });
     }
     const { title, company, role, status, link, salary, location, notes, dateApplied, priority, tags } = req.body;
+    const oldStatus = existing.status;
+    const newStatus = typeof status === 'string' ? status : existing.status;
     const job = await prisma_1.prisma.job.update({
         where: { id: existing.id },
         data: {
@@ -81,6 +91,16 @@ async function updateJob(req, res) {
             tags: tags !== undefined ? normalizeTags(tags) : existing.tags,
         },
     });
+    if (newStatus !== oldStatus) {
+        await prisma_1.prisma.activity.create({
+            data: {
+                userId: req.userId ?? 0,
+                type: newStatus.toLowerCase(),
+                message: `Status of ${job.role || job.title} at ${job.company} changed from ${oldStatus} to ${newStatus}`,
+                jobId: job.id,
+            },
+        });
+    }
     return res.json({ job });
 }
 async function deleteJob(req, res) {
@@ -90,6 +110,13 @@ async function deleteJob(req, res) {
     if (!existing) {
         return res.status(404).json({ message: 'Job not found' });
     }
+    await prisma_1.prisma.activity.create({
+        data: {
+            userId: req.userId ?? 0,
+            type: 'rejected',
+            message: `Removed job entry: ${existing.role || existing.title} at ${existing.company}`,
+        },
+    });
     await prisma_1.prisma.job.delete({ where: { id: existing.id } });
     return res.status(204).send();
 }

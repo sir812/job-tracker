@@ -1,10 +1,5 @@
 import axios from "axios";
-import { Job, Activity, InterviewEvent } from "../data/mockData";
-
-// Simulate network latency (in ms)
-const LATENCY = 600;
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { Job, Activity, InterviewEvent } from "../types/job";
 
 const DEFAULT_AUTH_API_BASE_URL = import.meta.env.DEV
   ? "http://localhost:4000/api"
@@ -110,150 +105,6 @@ const mapJobToFrontend = (backendJob: any): Job => {
   };
 };
 
-// Mock Database State in Memory (synchronized with localStorage) - Fallback for local storage & activities/interviews
-class MockDatabase {
-  private jobs: Job[] = [];
-  private activities: Activity[] = [];
-  private interviews: InterviewEvent[] = [];
-
-  constructor() {
-    this.load();
-  }
-
-  private load() {
-    if (typeof window !== "undefined") {
-      const savedJobs = localStorage.getItem("jt_jobs");
-      const savedActivities = localStorage.getItem("jt_activities");
-      const savedInterviews = localStorage.getItem("jt_interviews");
-
-      if (savedJobs) this.jobs = JSON.parse(savedJobs);
-      if (savedActivities) this.activities = JSON.parse(savedActivities);
-      if (savedInterviews) this.interviews = JSON.parse(savedInterviews);
-    }
-  }
-
-  save() {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("jt_jobs", JSON.stringify(this.jobs));
-      localStorage.setItem("jt_activities", JSON.stringify(this.activities));
-      localStorage.setItem("jt_interviews", JSON.stringify(this.interviews));
-    }
-  }
-
-  setInitialData(jobs: Job[], activities: Activity[], interviews: InterviewEvent[]) {
-    // Only seed mock jobs if user is NOT logged in to avoid polluting database accounts
-    const token = localStorage.getItem("jt_token");
-    if (!token && this.jobs.length === 0) {
-      this.jobs = [...jobs];
-      this.save();
-    }
-    if (this.activities.length === 0) {
-      this.activities = [...activities];
-      this.save();
-    }
-    if (this.interviews.length === 0) {
-      this.interviews = [...interviews];
-      this.save();
-    }
-  }
-
-  getJobs() {
-    return this.jobs;
-  }
-
-  addJob(job: Job) {
-    this.jobs.unshift(job);
-    this.addActivity({
-      id: `act-${Date.now()}`,
-      type: job.status.toLowerCase() as Activity["type"],
-      message: `Added new job entry: ${job.role} at ${job.company}`,
-      timestamp: new Date().toISOString(),
-      jobId: job.id,
-    });
-    this.save();
-    return job;
-  }
-
-  updateJob(id: string, updates: Partial<Job>) {
-    const idx = this.jobs.findIndex((j) => j.id === id);
-    if (idx !== -1) {
-      const oldStatus = this.jobs[idx].status;
-      const updatedJob = { ...this.jobs[idx], ...updates, updatedAt: new Date().toISOString() };
-      this.jobs[idx] = updatedJob;
-
-      if (updates.status && updates.status !== oldStatus) {
-        this.addActivity({
-          id: `act-${Date.now()}`,
-          type: updates.status.toLowerCase() as Activity["type"],
-          message: `Status of ${updatedJob.role} at ${updatedJob.company} changed from ${oldStatus} to ${updates.status}`,
-          timestamp: new Date().toISOString(),
-          jobId: updatedJob.id,
-        });
-      }
-      this.save();
-      return updatedJob;
-    }
-    throw new Error("Job not found");
-  }
-
-  deleteJob(id: string) {
-    const idx = this.jobs.findIndex((j) => j.id === id);
-    if (idx !== -1) {
-      const deleted = this.jobs[idx];
-      this.jobs.splice(idx, 1);
-      this.interviews = this.interviews.filter((i) => i.jobId !== id);
-      this.addActivity({
-        id: `act-${Date.now()}`,
-        type: "rejected",
-        message: `Removed job entry: ${deleted.role} at ${deleted.company}`,
-        timestamp: new Date().toISOString(),
-      });
-      this.save();
-      return true;
-    }
-    return false;
-  }
-
-  getActivities() {
-    return this.activities;
-  }
-
-  addActivity(act: Activity) {
-    this.activities.unshift(act);
-    if (this.activities.length > 50) this.activities.pop(); // limit log
-    this.save();
-  }
-
-  getInterviews() {
-    return this.interviews;
-  }
-
-  addInterview(evt: InterviewEvent) {
-    this.interviews.unshift(evt);
-    this.addActivity({
-      id: `act-${Date.now()}`,
-      type: "interview",
-      message: `Scheduled ${evt.type} interview for ${evt.role} at ${evt.company} on ${evt.date}`,
-      timestamp: new Date().toISOString(),
-      jobId: evt.jobId,
-    });
-    this.save();
-    return evt;
-  }
-
-  deleteInterview(id: string) {
-    const idx = this.interviews.findIndex((i) => i.id === id);
-    if (idx !== -1) {
-      this.interviews.splice(idx, 1);
-      this.save();
-      return true;
-    }
-    return false;
-  }
-}
-
-export const db = new MockDatabase();
-
 type AuthUser = {
   id?: number;
   email: string;
@@ -290,116 +141,90 @@ export const authService = {
   logout: () => {
     localStorage.removeItem("jt_token");
     localStorage.removeItem("jt_user");
-    // Clear mock jobs from localStorage to ensure next user session starts clean
     localStorage.removeItem("jt_jobs");
     localStorage.removeItem("jt_activities");
     localStorage.removeItem("jt_interviews");
   },
 };
 
-// Real & Mock Hybrid Jobs CRUD Service API
+// Real DB Driven Jobs, Activities, and Interviews CRUD Service API
 export const jobsService = {
   fetchJobs: async (): Promise<Job[]> => {
-    const token = localStorage.getItem("jt_token");
-    if (!token) {
-      await delay(LATENCY);
-      return [...db.getJobs()];
-    }
     const { data } = await apiInstance.get<{ jobs: any[] }>("/jobs");
     return data.jobs.map(mapJobToFrontend);
   },
 
   createJob: async (jobData: Omit<Job, "id" | "updatedAt">): Promise<Job> => {
-    const token = localStorage.getItem("jt_token");
-    if (!token) {
-      await delay(LATENCY);
-      const newJob: Job = {
-        ...jobData,
-        id: `job-${Date.now()}`,
-        updatedAt: new Date().toISOString(),
-      };
-      return db.addJob(newJob);
-    }
     const backendJobData = mapJobToBackend(jobData);
     const { data } = await apiInstance.post<{ job: any }>("/jobs", backendJobData);
-    const created = mapJobToFrontend(data.job);
-    
-    // Add to activity logs (stored in localStorage)
-    db.addActivity({
-      id: `act-${Date.now()}`,
-      type: created.status.toLowerCase() as Activity["type"],
-      message: `Added new job entry: ${created.role} at ${created.company}`,
-      timestamp: new Date().toISOString(),
-      jobId: created.id,
-    });
-
-    return created;
+    return mapJobToFrontend(data.job);
   },
 
   updateJob: async (id: string, updates: Partial<Job>): Promise<Job> => {
-    const token = localStorage.getItem("jt_token");
-    // Fallback if local storage mock job (starts with "job-") or no token
-    if (!token || id.startsWith("job-")) {
-      await delay(LATENCY);
-      return db.updateJob(id, updates);
-    }
     const backendUpdates = mapJobToBackend(updates);
     const { data } = await apiInstance.put<{ job: any }>(`/jobs/${id}`, backendUpdates);
-    const updated = mapJobToFrontend(data.job);
-
-    if (updates.status) {
-      db.addActivity({
-        id: `act-${Date.now()}`,
-        type: updates.status.toLowerCase() as Activity["type"],
-        message: `Status of ${updated.role} at ${updated.company} changed to ${updates.status}`,
-        timestamp: new Date().toISOString(),
-        jobId: updated.id,
-      });
-    }
-
-    return updated;
+    return mapJobToFrontend(data.job);
   },
 
   deleteJob: async (id: string): Promise<boolean> => {
-    const token = localStorage.getItem("jt_token");
-    if (!token || id.startsWith("job-")) {
-      await delay(LATENCY);
-      return db.deleteJob(id);
-    }
     await apiInstance.delete(`/jobs/${id}`);
-    
-    db.addActivity({
-      id: `act-${Date.now()}`,
-      type: "rejected",
-      message: `Removed job entry: ID ${id}`,
-      timestamp: new Date().toISOString(),
-    });
-
     return true;
   },
 
   fetchActivities: async (): Promise<Activity[]> => {
-    await delay(LATENCY / 2);
-    return [...db.getActivities()];
+    const { data } = await apiInstance.get<{ activities: any[] }>("/activities");
+    return data.activities.map((act) => ({
+      id: String(act.id),
+      type: act.type as Activity["type"],
+      message: act.message,
+      timestamp: act.timestamp || new Date().toISOString(),
+      jobId: act.jobId ? String(act.jobId) : undefined,
+    }));
   },
 
   fetchInterviews: async (): Promise<InterviewEvent[]> => {
-    await delay(LATENCY);
-    return [...db.getInterviews()];
+    const { data } = await apiInstance.get<{ interviews: any[] }>("/interviews");
+    return data.interviews.map((evt) => ({
+      id: String(evt.id),
+      jobId: String(evt.jobId),
+      company: evt.company,
+      role: evt.role,
+      title: evt.title,
+      date: evt.date,
+      time: evt.time,
+      type: evt.type as InterviewEvent["type"],
+      notes: evt.notes || undefined,
+    }));
   },
 
   createInterview: async (evtData: Omit<InterviewEvent, "id">): Promise<InterviewEvent> => {
-    await delay(LATENCY);
-    const newEvt: InterviewEvent = {
-      ...evtData,
-      id: `int-${Date.now()}`,
+    const { data } = await apiInstance.post<{ interview: any }>("/interviews", {
+      jobId: Number(evtData.jobId),
+      company: evtData.company,
+      role: evtData.role,
+      title: evtData.title,
+      date: evtData.date,
+      time: evtData.time,
+      type: evtData.type,
+      notes: evtData.notes,
+    });
+    const created = data.interview;
+    return {
+      id: String(created.id),
+      jobId: String(created.jobId),
+      company: created.company,
+      role: created.role,
+      title: created.title,
+      date: created.date,
+      time: created.time,
+      type: created.type as InterviewEvent["type"],
+      notes: created.notes || undefined,
     };
-    return db.addInterview(newEvt);
   },
 
   deleteInterview: async (id: string): Promise<boolean> => {
-    await delay(LATENCY);
-    return db.deleteInterview(id);
+    await apiInstance.delete(`/interviews/${id}`);
+    return true;
   },
 };
 

@@ -20,7 +20,7 @@ import {
   ExternalLink,
   Info,
 } from "lucide-react";
-import { Job } from "../data/mockData";
+import { Job } from "../types/job";
 
 // Validation schema for Adding & Editing Job entries
 const jobSchema = z.object({
@@ -38,7 +38,7 @@ const jobSchema = z.object({
 type JobFormValues = z.infer<typeof jobSchema>;
 
 export const Jobs: React.FC = () => {
-  const { jobs, createJob, updateJob, deleteJob } = useJobs();
+  const { jobs, createJob, updateJob, deleteJob, loading, error: jobsError, reloadAllData } = useJobs();
   const { success, error } = useToasts();
 
   // Dialog and panel views
@@ -164,6 +164,106 @@ export const Jobs: React.FC = () => {
       error("Failed to delete job entry", "Error");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center min-h-[400px]">
+        <div className="w-8 h-8 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (jobsError) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] p-6 text-center select-none">
+        <div className="bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 p-6 rounded-3xl max-w-md shadow-lg backdrop-blur-md flex flex-col items-center gap-4">
+          <span className="text-4xl">⚠️</span>
+          <div>
+            <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">Failed to Load Applications</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">{jobsError}</p>
+          </div>
+          <Button variant="primary" size="sm" onClick={reloadAllData}>
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (jobs.length === 0) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px] p-6 text-center select-none">
+        <div className="flex flex-col items-center gap-5 max-w-md bg-white dark:bg-black p-8 rounded-3xl border border-slate-200 dark:border-neutral-800 shadow-xl backdrop-blur-md">
+          <BriefcaseBusiness className="w-16 h-16 text-cyan-500 animate-pulse" />
+          <div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white">Start Tracking Your Job Search</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+              You don't have any job applications tracked yet. Start by adding your first job opportunity!
+            </p>
+          </div>
+          <Button onClick={handleOpenAdd} icon={<Plus className="w-4 h-4" />}>
+            Add Your First Job
+          </Button>
+        </div>
+
+        {/* Add Job Modal */}
+        <Modal isOpen={addOpen} onClose={() => setAddOpen(false)} title="Add Application Entry" size="md">
+          <form onSubmit={handleSubmit(onAddSubmit)} className="flex flex-col gap-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input {...register("company")} label="Company Name" placeholder="Google" error={errors.company?.message} required />
+              <Input {...register("role")} label="Job Role" placeholder="Software Engineer" error={errors.role?.message} required />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Select
+                {...register("status")}
+                label="Application Status"
+                options={[
+                  { label: "Saved", value: "Saved" },
+                  { label: "Applied", value: "Applied" },
+                  { label: "Interview", value: "Interview" },
+                  { label: "Offer", value: "Offer" },
+                  { label: "Rejected", value: "Rejected" },
+                ]}
+                error={errors.status?.message}
+              />
+              <Select
+                {...register("priority")}
+                label="Priority"
+                options={[
+                  { label: "Low", value: "Low" },
+                  { label: "Medium", value: "Medium" },
+                  { label: "High", value: "High" },
+                ]}
+                error={errors.priority?.message}
+              />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input {...register("location")} label="Location" placeholder="Mountain View, CA" error={errors.location?.message} required />
+              <Input {...register("salary")} label="Salary Estimate" placeholder="$150,000 - $180,000" error={errors.salary?.message} />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input {...register("dateApplied")} label="Date Applied" type="date" error={errors.dateApplied?.message} />
+              <Input {...register("jobLink")} label="Job Listing URL" placeholder="https://careers.google.com/..." error={errors.jobLink?.message} />
+            </div>
+
+            <Textarea {...register("notes")} label="Notes / Checklist" placeholder="Reference interview dates, salary breakdown..." error={errors.notes?.message} />
+
+            <div className="flex justify-end gap-3 border-t border-slate-850 pt-4 mt-2">
+              <Button variant="ghost" size="sm" type="button" onClick={() => setAddOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="primary" size="sm" type="submit">
+                Create Entry
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 select-none">
