@@ -1,5 +1,6 @@
 ### Backend Dockerfile (Express + Prisma)
 FROM cgr.dev/chainguard/node:latest-dev AS builder
+USER root
 WORKDIR /app
 
 # Install deps
@@ -23,9 +24,9 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Copy built app and production deps
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --chown=node:node --from=builder /app/dist ./dist
+COPY --chown=node:node --from=builder /app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /app/package.json ./package.json
 
 EXPOSE 4000
 CMD ["node", "dist/index.js"]
