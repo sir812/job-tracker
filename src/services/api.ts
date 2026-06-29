@@ -11,6 +11,9 @@ const DEFAULT_AI_API_BASE_URL = import.meta.env.DEV
 const AUTH_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_AUTH_API_BASE_URL;
 const AI_API_BASE_URL = import.meta.env.VITE_AI_API_BASE_URL || DEFAULT_AI_API_BASE_URL;
 
+console.log("Resolved Auth API URL:", AUTH_API_BASE_URL);
+console.log("Resolved AI API URL:", AI_API_BASE_URL);
+
 export const apiInstance = axios.create({
   baseURL: AUTH_API_BASE_URL,
   headers: {
