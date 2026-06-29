@@ -12,8 +12,8 @@ This file shows how to deploy both the backend and frontend to Railway, includin
    - Add two services:
      - Backend service:
        - Source: your repo (path: `backend`)
-       - Build command: `npm ci && npx prisma generate && npm run build`
-       - Start command: `node dist/index.js`
+       - Build command: `npm ci --production=false && npx prisma generate && npm run build`
+       - Start command: `node dist/src/index.js`
        - Environment variables: `DATABASE_URL`, `JWT_SECRET`
      - Frontend service:
        - Source: your repo (root path)
@@ -49,8 +49,8 @@ Sample `railway.json` (example)
     {
       "name": "backend",
       "path": "backend",
-      "build": "npm ci && npx prisma generate && npm run build",
-      "start": "node dist/index.js",
+      "build": "npm ci --production=false && npx prisma generate && npm run build",
+      "start": "node dist/src/index.js",
       "env": ["DATABASE_URL", "JWT_SECRET"]
     },
     {

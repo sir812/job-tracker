@@ -14,7 +14,7 @@ Quick steps
 2) Create a Railway service (or use Docker)
    - Option A (Docker): Build and deploy the `backend/Dockerfile` and the repo `Dockerfile` for frontend.
    - Option B (Railway native): Create two services:
-     - Backend: configure a Node service and set `start` command to `node dist/index.js`.
+     - Backend: configure a Node service and set `start` command to `node dist/src/index.js`.
      - Frontend: configure a Node service and run `npm run build && npm start`.
 
 Environment variables
