@@ -2,8 +2,8 @@ import axios from "axios";
 import { Job, Activity, InterviewEvent } from "../types/job";
 
 const DEFAULT_AUTH_API_BASE_URL = import.meta.env.DEV
-  ? "http://localhost:4000/api"
-  : "http://localhost:4000/api";
+  ? "http://127.0.0.1:4000/api"
+  : "http://127.0.0.1:4000/api";
 const DEFAULT_AI_API_BASE_URL = import.meta.env.DEV
   ? "http://127.0.0.1:8000/api"
   : "http://127.0.0.1:8000/api";
