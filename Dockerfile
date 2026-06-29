@@ -11,13 +11,17 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM cgr.dev/chainguard/node:latest AS runner
+FROM cgr.dev/chainguard/node:latest-dev AS runner
+USER root
 WORKDIR /app
 ENV NODE_ENV=production
+
+# Install serve to host the static build
+RUN npm install -g serve
 
 # Copy static build files from builder
 COPY --chown=node:node --from=builder /app/dist ./dist
 
 EXPOSE 3000
 # Serve the static Vite build folder using serve on port 3000
-CMD ["npx", "serve", "dist", "-p", "3000", "-s"]
+CMD ["serve", "dist", "-p", "3000", "-s"]
