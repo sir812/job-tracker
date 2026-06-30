@@ -12,7 +12,13 @@
       "path": ".",
       "build": "npm ci && npm run build",
       "start": "npm start",
-      "env": ["NEXT_PUBLIC_API_URL"]
+      "env": ["NEXT_PUBLIC_API_URL", "VITE_API_BASE_URL", "VITE_AI_API_BASE_URL"]
+    },
+    {
+      "name": "ai-backend",
+      "path": "backend",
+      "start": "uvicorn app.main:app --host 0.0.0.0 --port $PORT",
+      "env": ["GROQ_API_KEY", "EXPRESS_API_BASE"]
     }
   ]
 }
