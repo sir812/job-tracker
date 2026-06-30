@@ -124,7 +124,7 @@ export const Calendar: React.FC = () => {
                 >
                   <span
                     className={`text-xs font-bold ${
-                      isToday ? "text-cyan-400" : hasEvents ? "text-black dark:text-white" : "text-black"
+                      isToday ? "text-cyan-400" : "text-black dark:text-white"
                     }`}
                   >
                     {day}
