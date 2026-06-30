@@ -19,7 +19,8 @@ RUN npx prisma generate
 # Build application
 RUN npm run build
 
-FROM cgr.dev/chainguard/node:latest AS runner
+FROM cgr.dev/chainguard/node:latest-dev AS runner
+USER root
 WORKDIR /app
 ENV NODE_ENV=production
 
@@ -27,6 +28,7 @@ ENV NODE_ENV=production
 COPY --chown=node:node --from=builder /app/dist ./dist
 COPY --chown=node:node --from=builder /app/node_modules ./node_modules
 COPY --chown=node:node --from=builder /app/package.json ./package.json
+COPY --chown=node:node --from=builder /app/prisma ./prisma
 
 EXPOSE 4000
-CMD ["node", "dist/src/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/index.js"]

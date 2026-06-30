@@ -4,7 +4,7 @@
       "name": "backend",
       "path": "backend",
       "build": "npm ci --production=false && npx prisma generate && npm run build",
-      "start": "node dist/src/index.js",
+      "start": "npx prisma migrate deploy && node dist/src/index.js",
       "env": ["DATABASE_URL", "JWT_SECRET"]
     },
     {
