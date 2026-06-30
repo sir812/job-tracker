@@ -9,7 +9,7 @@ const router = (0, express_1.Router)();
 const AI_BACKEND_URL = process.env.AI_BACKEND_URL || 'http://127.0.0.1:8000';
 router.all('/*', async (req, res, next) => {
     try {
-        const targetUrl = `${AI_BACKEND_URL}/api${req.path}`;
+        const targetUrl = `${AI_BACKEND_URL}${req.originalUrl}`;
         // Forward the request to FastAPI
         const response = await (0, axios_1.default)({
             method: req.method,
