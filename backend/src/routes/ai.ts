@@ -2,7 +2,11 @@ import { Router } from 'express';
 import axios from 'axios';
 
 const router = Router();
-const AI_BACKEND_URL = process.env.AI_BACKEND_URL || 'http://127.0.0.1:8000';
+const AI_BACKEND_URL = process.env.AI_BACKEND_URL || (
+  process.env.NODE_ENV === 'production'
+    ? 'http://ai-backend.railway.internal:8000'
+    : 'http://127.0.0.1:8000'
+);
 
 router.use(async (req, res, next) => {
   try {
