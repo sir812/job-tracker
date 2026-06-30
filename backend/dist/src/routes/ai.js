@@ -7,7 +7,7 @@ const express_1 = require("express");
 const axios_1 = __importDefault(require("axios"));
 const router = (0, express_1.Router)();
 const AI_BACKEND_URL = process.env.AI_BACKEND_URL || 'http://127.0.0.1:8000';
-router.all('/*', async (req, res, next) => {
+router.use(async (req, res, next) => {
     try {
         const targetUrl = `${AI_BACKEND_URL}${req.originalUrl}`;
         // Forward the request to FastAPI
