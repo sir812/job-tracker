@@ -3,7 +3,7 @@ import { Job, Activity, InterviewEvent } from "../types/job";
 
 const DEFAULT_AUTH_API_BASE_URL = import.meta.env.DEV
   ? "http://127.0.0.1:4000/api"
-  : "http://127.0.0.1:4000/api";
+  : "https://job-tracker-production-a2e6.up.railway.app/api";
 const DEFAULT_AI_API_BASE_URL = import.meta.env.DEV
   ? "http://127.0.0.1:8000/api"
   : "http://127.0.0.1:8000/api";
