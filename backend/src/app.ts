@@ -5,6 +5,7 @@ import jobRoutes from './routes/jobs';
 import scraperRoutes from './routes/scraper';
 import activityRoutes from './routes/activities';
 import interviewRoutes from './routes/interviews';
+import aiRoutes from './routes/ai';
 import { errorHandler } from './middleware/errorHandler';
 
 export const app = express();
@@ -21,6 +22,7 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/scraper', scraperRoutes);
 app.use('/api/activities', activityRoutes);
 app.use('/api/interviews', interviewRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ message: 'Route not found' });
