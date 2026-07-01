@@ -20,7 +20,7 @@ export const Toggle: React.FC<ToggleProps> = ({
     <div className="flex items-start justify-between gap-4 py-2">
       {(label || description) && (
         <div className="flex flex-col gap-0.5 select-none">
-          {label && <span className="text-sm font-semibold text-white">{label}</span>}
+          {label && <span className="text-sm font-semibold text-white light:text-slate-900">{label}</span>}
           {description && <span className="text-xs text-black">{description}</span>}
         </div>
       )}
@@ -30,13 +30,13 @@ export const Toggle: React.FC<ToggleProps> = ({
         onClick={() => onChange(!checked)}
         title={label ? `${label}: ${checked ? "on" : "off"}` : checked ? "On" : "Off"}
         className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none focus:ring-2 focus:ring-cyan-500/50 ${
-          checked ? "bg-cyan-500" : "bg-neutral-900"
+          checked ? "bg-cyan-500" : "bg-neutral-900 light:bg-slate-200"
         } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
       >
         <motion.span
           animate={{ x: checked ? 20 : 0 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-black shadow-md ring-0"
+          className="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-black light:bg-white shadow-md ring-0"
         />
       </button>
     </div>

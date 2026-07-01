@@ -395,12 +395,12 @@ export const AIChat: React.FC = () => {
         </div>
         <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-slate-100 dark:text-white">Smarter AI Chatbot</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-100 dark:text-white light:text-slate-900">Smarter AI Chatbot</h2>
             <p className="text-xs text-black dark:text-white mt-1">
               Use job context, resume bullets, and targeted modes for stronger prompts and cleaner outputs.
             </p>
           </div>
-          <Link to="/jobs" className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+          <Link to="/jobs" className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors light:text-cyan-600 light:hover:text-cyan-500">
             Pull from your jobs
           </Link>
         </div>
@@ -408,13 +408,13 @@ export const AIChat: React.FC = () => {
         <Modal isOpen={applyModalOpen} onClose={() => setApplyModalOpen(false)} title="Application preview" size="lg">
           <div className="space-y-4">
             <div className="text-sm text-black dark:text-white">
-              <p className="font-semibold text-slate-100 dark:text-white">Preview</p>
-              <pre className="whitespace-pre-wrap text-xs bg-black/70 p-3 rounded-md border border-neutral-800 mt-2">{applyPreviewText}</pre>
+              <p className="font-semibold text-slate-100 dark:text-white light:text-slate-900">Preview</p>
+              <pre className="whitespace-pre-wrap text-xs bg-black/70 p-3 rounded-md border border-neutral-800 mt-2 light:bg-slate-50 light:border-slate-200 light:text-slate-800">{applyPreviewText}</pre>
             </div>
 
             {generatedCoverLetter ? (
               <div className="text-sm text-black dark:text-white">
-                <p className="font-semibold text-slate-100 dark:text-white">Generated Cover Letter</p>
+                <p className="font-semibold text-slate-100 dark:text-white light:text-slate-900">Generated Cover Letter</p>
                 <pre className="whitespace-pre-wrap text-xs bg-black/70 p-3 rounded-md border border-neutral-800 mt-2">{generatedCoverLetter}</pre>
               </div>
             ) : null}
@@ -428,15 +428,15 @@ export const AIChat: React.FC = () => {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.55fr_1fr] items-start">
-        <Card className="p-0 overflow-hidden flex flex-col min-h-[74vh] border-neutral-800 bg-gradient-to-br from-black via-black to-neutral-950">
-          <div className="flex items-center justify-between gap-4 px-5 py-4 border-b border-neutral-800 bg-black/70 backdrop-blur-sm">
+        <Card className="p-0 overflow-hidden flex flex-col min-h-[74vh] border-neutral-800 bg-gradient-to-br from-black via-black to-neutral-950 light:bg-white light:bg-none light:border-slate-200">
+          <div className="flex items-center justify-between gap-4 px-5 py-4 border-b border-neutral-800 bg-black/70 backdrop-blur-sm light:border-slate-200 light:bg-slate-50/80">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-2xl bg-black border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-black border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0 light:bg-slate-100 light:border-cyan-200 light:text-cyan-600">
                 <Bot className="w-5 h-5" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-sm font-bold text-slate-100 dark:text-white truncate">Job Tracker AI</h3>
-                <p className="text-[11px] text-black dark:text-white truncate">Connected to backend AI routes with smart job context</p>
+                <h3 className="text-sm font-bold text-slate-100 dark:text-white truncate light:text-slate-900">Job Tracker AI</h3>
+                <p className="text-[11px] text-black dark:text-white truncate light:text-slate-500">Connected to backend AI routes with smart job context</p>
               </div>
             </div>
 
@@ -457,14 +457,14 @@ export const AIChat: React.FC = () => {
                     onClick={() => setMode(item.value)}
                     className={`flex items-start gap-3 p-3 rounded-2xl border transition-all text-left ${
                       active
-                        ? "bg-cyan-500/10 border-cyan-400/30 text-slate-100 shadow-lg shadow-black/20"
-                        : "bg-black/70 border-neutral-800 hover:bg-black hover:border-neutral-700 text-black"
+                        ? "bg-cyan-500/10 border-cyan-400/30 text-slate-100 shadow-lg shadow-black/20 light:bg-cyan-50 light:border-cyan-200 light:text-cyan-950 light:shadow-none"
+                        : "bg-black/70 border-neutral-800 hover:bg-black hover:border-neutral-700 text-black light:bg-slate-50 light:border-slate-200 light:hover:bg-slate-100 light:text-slate-700"
                     }`}
                   >
-                    <div className={`mt-0.5 shrink-0 ${active ? "text-cyan-300" : "text-black"}`}>{item.icon}</div>
+                    <div className={`mt-0.5 shrink-0 ${active ? "text-cyan-300 light:text-cyan-600" : "text-black light:text-slate-400"}`}>{item.icon}</div>
                     <div className="min-w-0">
                       <p className="text-xs font-bold uppercase tracking-wider">{item.label}</p>
-                      <p className="text-[11px] mt-1 text-black dark:text-white leading-relaxed">{item.description}</p>
+                      <p className="text-[11px] mt-1 text-black dark:text-white leading-relaxed light:text-slate-500">{item.description}</p>
                     </div>
                   </button>
                 );
@@ -485,42 +485,42 @@ export const AIChat: React.FC = () => {
                 <div
                   className={`max-w-[88%] rounded-3xl px-4 py-3 border shadow-lg backdrop-blur-sm ${
                     message.role === "user"
-                        ? "bg-cyan-500/15 border-cyan-400/20 text-slate-100"
-                        : "bg-black/70 border-neutral-800 text-slate-100"
+                        ? "bg-cyan-500/15 border-cyan-400/20 text-slate-100 light:bg-cyan-50 light:border-cyan-200 light:text-slate-800"
+                        : "bg-black/70 border-neutral-800 text-slate-100 light:bg-slate-100 light:border-slate-200 light:text-slate-800"
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.2em] font-bold">
                     {message.role === "user" ? (
                       <>
-                        <User2 className="w-3.5 h-3.5 text-cyan-400" />
-                        <span className="text-cyan-300">You</span>
+                        <User2 className="w-3.5 h-3.5 text-cyan-400 light:text-cyan-600" />
+                        <span className="text-cyan-300 light:text-cyan-700">You</span>
                       </>
                     ) : (
                       <>
-                        <Bot className="w-3.5 h-3.5 text-cyan-400" />
-                        <span className="text-cyan-300">Assistant</span>
-                        {message.tag ? <span className="text-black">/ {message.tag}</span> : null}
+                        <Bot className="w-3.5 h-3.5 text-cyan-400 light:text-cyan-600" />
+                        <span className="text-cyan-300 light:text-cyan-700">Assistant</span>
+                        {message.tag ? <span className="text-black light:text-slate-500">/ {message.tag}</span> : null}
                       </>
                     )}
                   </div>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap text-slate-100">{message.content}</p>
-                  <span className="mt-2 block text-[10px] font-medium text-black">{formatTime(message.timestamp)}</span>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap text-slate-100 light:text-slate-850">{message.content}</p>
+                  <span className="mt-2 block text-[10px] font-medium text-black light:text-slate-400">{formatTime(message.timestamp)}</span>
                 </div>
               </div>
             ))}
 
             {loading && (
               <div className="flex justify-start">
-                <div className="rounded-3xl px-4 py-3 bg-black/70 border border-neutral-800 text-black max-w-[88%]">
+                <div className="rounded-3xl px-4 py-3 bg-black/70 border border-neutral-800 text-black max-w-[88%] light:bg-slate-100 light:border-slate-200 light:text-slate-850">
                   <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold mb-2">
-                    <Bot className="w-3.5 h-3.5 text-cyan-400" />
-                    <span className="text-cyan-300">Assistant</span>
+                    <Bot className="w-3.5 h-3.5 text-cyan-400 light:text-cyan-600" />
+                    <span className="text-cyan-300 light:text-cyan-700">Assistant</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                     <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse [animation-delay:120ms]" />
                     <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse [animation-delay:240ms]" />
-                    <span className="text-black ml-2">Thinking...</span>
+                    <span className="text-black ml-2 light:text-slate-600">Thinking...</span>
                   </div>
                 </div>
               </div>
@@ -529,7 +529,7 @@ export const AIChat: React.FC = () => {
             <div ref={chatEndRef} />
           </div>
 
-          <div className="border-t border-neutral-800 bg-black/80 backdrop-blur-sm p-4 md:p-5 space-y-4">
+          <div className="border-t border-neutral-800 bg-black/80 backdrop-blur-sm p-4 md:p-5 space-y-4 light:border-slate-200 light:bg-slate-50/80">
             {mode === "cover-letter" || mode === "job-fit" || mode === "interview-prep" ? (
               <div className="grid gap-3 sm:grid-cols-2">
                 <Select
@@ -690,7 +690,7 @@ export const AIChat: React.FC = () => {
 
         <div className="flex flex-col gap-6 sticky top-6">
           <Card className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 border-b border-neutral-800 pb-3">
+            <div className="flex items-center gap-2 border-b border-neutral-800 pb-3 light:border-slate-200">
               <BriefcaseBusiness className="w-5 h-5 text-cyan-400" />
               <h3 className="text-sm font-bold text-black dark:text-white uppercase tracking-wider">Recent Jobs</h3>
             </div>
@@ -714,17 +714,17 @@ export const AIChat: React.FC = () => {
                       }}
                       className={`w-full text-left p-3 rounded-2xl border transition-all ${
                         active
-                          ? "bg-cyan-500/10 border-cyan-400/30"
-                            : "bg-black/70 border-neutral-800 hover:bg-black hover:border-neutral-700"
+                          ? "bg-cyan-500/10 border-cyan-400/30 light:bg-cyan-50 light:border-cyan-200"
+                            : "bg-black/70 border-neutral-800 hover:bg-black hover:border-neutral-700 light:bg-slate-50 light:border-slate-200 light:hover:bg-slate-100"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h4 className="text-sm font-semibold text-slate-100 dark:text-white truncate">{job.company}</h4>
-                          <p className="text-xs text-black dark:text-white mt-1 truncate">{job.role}</p>
-                          <p className="text-[11px] text-black dark:text-white mt-2 truncate">{job.location}</p>
+                          <h4 className="text-sm font-semibold text-slate-100 dark:text-white truncate light:text-slate-900">{job.company}</h4>
+                          <p className="text-xs text-black dark:text-white mt-1 truncate light:text-slate-600">{job.role}</p>
+                          <p className="text-[11px] text-black dark:text-white mt-2 truncate light:text-slate-500">{job.location}</p>
                         </div>
-                        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-cyan-300 bg-black border border-cyan-500/20 px-2 py-1 rounded-full">
+                        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-cyan-300 bg-black border border-cyan-500/20 px-2 py-1 rounded-full light:bg-cyan-50 light:border-cyan-200 light:text-cyan-700">
                           {job.status}
                         </span>
                       </div>
@@ -736,22 +736,22 @@ export const AIChat: React.FC = () => {
           </Card>
 
           <Card className="flex flex-col gap-4">
-            <div className="flex items-center gap-2 border-b border-neutral-800 pb-3">
-              <Sparkles className="w-5 h-5 text-cyan-400" />
+            <div className="flex items-center gap-2 border-b border-neutral-800 pb-3 light:border-slate-200">
+              <Sparkles className="w-5 h-5 text-cyan-400 shrink-0" />
               <h3 className="text-sm font-bold text-black dark:text-white uppercase tracking-wider">How It Works</h3>
             </div>
             <div className="space-y-3 text-sm text-black dark:text-white">
-              <div className="p-3 rounded-xl bg-black/70 border border-neutral-800">
-                <p className="font-semibold text-slate-100 dark:text-white">1. Pick a mode</p>
-                <p className="text-xs text-black dark:text-white mt-1">General chat, cover letter, bullet rewrite, job fit, or interview prep.</p>
+              <div className="p-3 rounded-xl bg-black/70 border border-neutral-800 light:bg-slate-50 light:border-slate-200">
+                <p className="font-semibold text-slate-100 dark:text-white light:text-slate-900">1. Pick a mode</p>
+                <p className="text-xs text-black dark:text-white mt-1 light:text-slate-500">General chat, cover letter, bullet rewrite, job fit, or interview prep.</p>
               </div>
-              <div className="p-3 rounded-xl bg-black/70 border border-neutral-800">
-                <p className="font-semibold text-slate-100 dark:text-white">2. Add job context</p>
-                <p className="text-xs text-black dark:text-white mt-1">Select a recent job to auto-fill company, role, status, notes, and tags.</p>
+              <div className="p-3 rounded-xl bg-black/70 border border-neutral-800 light:bg-slate-50 light:border-slate-200">
+                <p className="font-semibold text-slate-100 dark:text-white light:text-slate-900">2. Add job context</p>
+                <p className="text-xs text-black dark:text-white mt-1 light:text-slate-500">Select a recent job to auto-fill company, role, status, notes, and tags.</p>
               </div>
-              <div className="p-3 rounded-xl bg-black/70 border border-neutral-800">
-                <p className="font-semibold text-slate-100 dark:text-white">3. Generate smarter output</p>
-                <p className="text-xs text-black dark:text-white mt-1">The frontend calls a specialized endpoint based on your mode.</p>
+              <div className="p-3 rounded-xl bg-black/70 border border-neutral-800 light:bg-slate-50 light:border-slate-200">
+                <p className="font-semibold text-slate-100 dark:text-white light:text-slate-900">3. Generate smarter output</p>
+                <p className="text-xs text-black dark:text-white mt-1 light:text-slate-500">The frontend calls a specialized endpoint based on your mode.</p>
               </div>
             </div>
           </Card>

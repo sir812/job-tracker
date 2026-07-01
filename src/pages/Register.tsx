@@ -118,7 +118,7 @@ export const Register: React.FC = () => {
             <div className="mt-2 flex flex-col gap-1">
               <div className="flex justify-between items-center text-[10px] font-semibold text-black dark:text-white">
                 <span>Password Strength</span>
-                <span className={strength.score <= 50 ? "text-amber-400" : "text-cyan-400"}>
+                <span className={strength.score <= 50 ? "text-amber-400 light:text-amber-600" : "text-cyan-400 light:text-cyan-600"}>
                   {strength.label}
                 </span>
               </div>

@@ -509,7 +509,7 @@ export const Jobs: React.FC = () => {
       <Modal isOpen={deleteOpen} onClose={() => setDeleteOpen(false)} title="Confirm Deletion" size="sm">
         <div className="flex flex-col gap-4 select-none">
           <p className="text-sm text-black leading-relaxed">
-            Are you sure you want to remove the job entry for <strong className="text-slate-100">{activeJob?.role}</strong> at <strong className="text-slate-100">{activeJob?.company}</strong>? This will also remove any related interview schedule items.
+            Are you sure you want to remove the job entry for <strong className="text-slate-900 dark:text-slate-100">{activeJob?.role}</strong> at <strong className="text-slate-900 dark:text-slate-100">{activeJob?.company}</strong>? This will also remove any related interview schedule items.
           </p>
           <div className="flex justify-end gap-3 border-t border-slate-850 pt-4">
             <Button variant="ghost" size="sm" onClick={() => setDeleteOpen(false)}>
@@ -530,7 +530,7 @@ export const Jobs: React.FC = () => {
               <span className="text-xs uppercase font-bold text-black tracking-wider">
                 {activeJob.company}
               </span>
-              <h4 className="text-lg font-bold text-slate-100 mt-1">{activeJob.role}</h4>
+              <h4 className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1">{activeJob.role}</h4>
             </div>
 
             <div className="flex flex-wrap gap-2">
