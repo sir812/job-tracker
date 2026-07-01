@@ -9,6 +9,8 @@ private-info.local
 # Local SQLite dev database
 /prisma/dev.db
 /prisma/dev.db-journal
+/prisma/prisma/dev.db
+/prisma/prisma/dev.db-journal
 
 # Scraper output — generated at runtime, not committed
 /data/
