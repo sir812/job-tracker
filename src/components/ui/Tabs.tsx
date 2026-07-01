@@ -30,7 +30,7 @@ export const Tabs: React.FC<TabsProps> = ({
             className={`flex items-center gap-2 px-4 py-3 text-sm font-semibold border-b-2 transition-all cursor-pointer whitespace-nowrap ${
               isActive
                 ? "border-cyan-500 text-cyan-400"
-                : "border-transparent text-black hover:text-white light:text-slate-500 light:hover:text-slate-900"
+                : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             {tab.icon && <span className="shrink-0">{tab.icon}</span>}
