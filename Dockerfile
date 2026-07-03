@@ -7,6 +7,13 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+# Build-time env vars — Vite bakes these into the static bundle at build time.
+# Pass via: docker build --build-arg VITE_API_BASE_URL=https://... .
+ARG VITE_API_BASE_URL=https://job-tracker-production-a2e6.up.railway.app/api
+ARG VITE_AI_API_BASE_URL=https://job-tracker-production-a2e6.up.railway.app/api
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_AI_API_BASE_URL=$VITE_AI_API_BASE_URL
+
 # Copy source and build
 COPY . .
 RUN npm run build

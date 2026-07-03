@@ -60,4 +60,6 @@ jobs:
       - name: Build and push frontend image
         run: |
           docker buildx build --platform linux/amd64 --push \
+            --build-arg VITE_API_BASE_URL=https://job-tracker-production-a2e6.up.railway.app/api \
+            --build-arg VITE_AI_API_BASE_URL=https://job-tracker-production-a2e6.up.railway.app/api \
             -t ghcr.io/${{ github.repository_owner }}/job-tracker-frontend:${{ github.sha }} .
