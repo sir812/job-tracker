@@ -5,11 +5,15 @@ import { Job, Activity, InterviewEvent } from "../types/job";
 // AND from phones / other devices on the same network (e.g. 192.168.x.x).
 const DEV_HOST = typeof window !== "undefined" ? window.location.hostname : "127.0.0.1";
 
-const DEFAULT_AUTH_API_BASE_URL = import.meta.env.DEV
-  ? `http://${DEV_HOST}:4000/api`
+// In production, we force relative URLs to go through Vercel's routing proxy.
+// This prevents CORS and cross-origin blocks (like 405 Method Not Allowed) on mobile carriers.
+const AUTH_API_BASE_URL = import.meta.env.DEV
+  ? (import.meta.env.VITE_API_BASE_URL || `http://${DEV_HOST}:4000/api`)
   : "/api";
-const AUTH_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_AUTH_API_BASE_URL;
-const AI_API_BASE_URL = import.meta.env.VITE_AI_API_BASE_URL || (import.meta.env.DEV ? `http://${DEV_HOST}:8000/api` : AUTH_API_BASE_URL);
+
+const AI_API_BASE_URL = import.meta.env.DEV
+  ? (import.meta.env.VITE_AI_API_BASE_URL || `http://${DEV_HOST}:8000/api`)
+  : "/api";
 
 console.log("Resolved Auth API URL:", AUTH_API_BASE_URL);
 console.log("Resolved AI API URL:", AI_API_BASE_URL);
