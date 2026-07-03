@@ -7,7 +7,7 @@ const DEV_HOST = typeof window !== "undefined" ? window.location.hostname : "127
 
 const DEFAULT_AUTH_API_BASE_URL = import.meta.env.DEV
   ? `http://${DEV_HOST}:4000/api`
-  : "https://job-tracker-production-a2e6.up.railway.app/api";
+  : "/api";
 const AUTH_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_AUTH_API_BASE_URL;
 const AI_API_BASE_URL = import.meta.env.VITE_AI_API_BASE_URL || (import.meta.env.DEV ? `http://${DEV_HOST}:8000/api` : AUTH_API_BASE_URL);
 
