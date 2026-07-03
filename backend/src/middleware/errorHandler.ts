@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 
+interface HttpError extends Error {
+  status?: number;
+  statusCode?: number;
+  expose?: boolean;
+}
+
 export function errorHandler(
   error: unknown,
   _req: Request,
@@ -24,6 +30,13 @@ export function errorHandler(
       });
     }
     return res.status(503).json({ message: 'Database request failed' });
+  }
+
+  // Handle body-parser / express errors that set statusCode + expose:true
+  const httpErr = error as HttpError;
+  if (httpErr?.expose && (httpErr.statusCode ?? httpErr.status)) {
+    const code = httpErr.statusCode ?? httpErr.status ?? 400;
+    return res.status(code).json({ message: httpErr.message ?? 'Bad request' });
   }
 
   return res.status(500).json({ message: 'Internal server error' });
