@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await authService.login(email, password);
       setToken(res.token);
       setUser(res.user);
+      window.dispatchEvent(new CustomEvent("jt_auth_change", { detail: { loggedIn: true } }));
     } finally {
       setLoading(false);
     }
@@ -51,6 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await authService.register(name, email, password);
       setToken(res.token);
       setUser(res.user);
+      window.dispatchEvent(new CustomEvent("jt_auth_change", { detail: { loggedIn: true } }));
     } finally {
       setLoading(false);
     }
@@ -60,6 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     authService.logout();
     setToken(null);
     setUser(null);
+    window.dispatchEvent(new CustomEvent("jt_auth_change", { detail: { loggedIn: false } }));
   };
 
   return (

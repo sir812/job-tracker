@@ -26,9 +26,47 @@ export const JobProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all initial database records on boot
+  // Only load data when a valid auth token is present.
+  // This prevents unauthenticated API calls on the login/register pages
+  // which would crash the dashboard on mobile and remote deployments.
   useEffect(() => {
-    loadAllData();
+    const token = localStorage.getItem("jt_token");
+    if (token) {
+      loadAllData();
+    }
+
+    // Handle cross-tab login/logout via the native storage event
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "jt_token") {
+        if (e.newValue) {
+          loadAllData();
+        } else {
+          setJobs([]);
+          setActivities([]);
+          setInterviews([]);
+          setError(null);
+        }
+      }
+    };
+
+    // Handle same-tab login/logout via a custom event dispatched by AuthContext
+    const handleAuthChange = (e: CustomEvent) => {
+      if (e.detail?.loggedIn) {
+        loadAllData();
+      } else {
+        setJobs([]);
+        setActivities([]);
+        setInterviews([]);
+        setError(null);
+      }
+    };
+
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("jt_auth_change", handleAuthChange as EventListener);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("jt_auth_change", handleAuthChange as EventListener);
+    };
   }, []);
 
   const loadAllData = async () => {
