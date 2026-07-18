@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files — keep secrets out but allow the public production config
 .env
+.env.production
 .env.local
 .env.*.local
 
